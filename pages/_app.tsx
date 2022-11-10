@@ -23,7 +23,7 @@ function MyApp({ Component, pageProps }: AppProps) {
              textAlign='center' 
              color='primary.600' 
              fontWeight='bold' 
-             fontSize='4xl' 
+             fontSize='5xl' 
              fontFamily='sans' 
              textTransform='uppercase' 
              lineHeight='normal'

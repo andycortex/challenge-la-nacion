@@ -27,7 +27,7 @@ export type Article = {
     website_url: string
   }
   
-  type Tag = {
+export type Tag = {
     slug: string
     text: string
   }
@@ -1985,12 +1985,27 @@ const api = {
             "/recetas/platos-de-comida-principal/hamburguesa-de-berenjenas-nid18012019-6/",
         },
       ]
+    const articles = data.filter((article) => article.subtype === "7").slice(0, 30).map((article) =>({
+      ...article,
+      display_date: new Date(article.display_date).toLocaleDateString('es-BO',{ year: 'numeric', month: 'long', day: 'numeric' })
+  }))
+      const tagMap = articles.reduce<Record<string, {count: number, slug: string, text: string}>>((map, article) => {
+        for (const tag of article.taxonomy.tags) {
+            if (!map[tag.slug]) {
+                map[tag.slug] = {
+                    ...tag,
+                    count: 0
+                }
+            }
+            map[tag.slug].count ++
+        }
+        return map
+    },{})
+    
+    const sortedTags = Object.values(tagMap).sort((a,b) => b.count - a.count).slice(0, 10)
     return {
-        articles: data.filter((article) => article.subtype === "7").slice(0, 30).map((article) =>({
-            ...article,
-            display_date: new Date(article.display_date).toLocaleDateString('es-BO',{ year: 'numeric', month: 'long', day: 'numeric' })
-        })),
-        tags:[]
+        articles,
+        tags: sortedTags
     }
   },
 };
